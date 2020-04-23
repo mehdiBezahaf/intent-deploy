@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import json
 import os
-from compiler import compiler
+from compiler import compile
 
 from flask import Flask, make_response, request
 from future.standard_library import install_aliases
@@ -24,7 +24,7 @@ def deploy():
 
     print("Request: {}".format(json.dumps(req, indent=4)))
     try:
-        res = compiler.handle_request(req)
+        res = compile.handle_request(req)
     except Exception as err:
         print(err)
         res = {"status": {'code': 404, 'details': 'Could not deploy intent.'}}
