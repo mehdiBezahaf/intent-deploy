@@ -50,7 +50,7 @@ def extract_values(nile_intent, op, value_id):
         extracted_op = extract_operation(nile_intent, op, op_idx)
         extracted_op = re.sub('\s(?=[^\(\)]*\))', '-', extracted_op) #reaplce spaces inside values for dividers
         for term in extracted_op.replace(op, '').strip().split():
-            print term
+            print (term)
             m = re.search(value_id + '\((.+)\)(,?)', term)
             if m:
                 values.append(m.group(1).replace('\'', ''))
