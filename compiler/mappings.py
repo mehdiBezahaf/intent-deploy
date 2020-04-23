@@ -2,7 +2,7 @@ import copy
 import re
 from random import randint, sample
 
-import config
+from . import config
 
 
 def write():
