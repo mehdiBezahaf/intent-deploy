@@ -1,4 +1,4 @@
 import compiler
 
-import config
-import mappings
+from . import config
+from . import mappings
