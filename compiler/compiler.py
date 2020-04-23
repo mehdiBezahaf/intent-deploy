@@ -4,10 +4,9 @@ import re
 import subprocess
 import time
 
-import config
-import mappings
+from compiler import config, mappings, parser
 import json
-import parser
+
 
 m = {}
 
