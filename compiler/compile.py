@@ -110,6 +110,12 @@ def compile_yacc(nile_intent):
     endpoints = parser.endpoints
     middleboxes = parser.middleboxes
 
+    #for debug purpose 
+    print 'endpoint source is: '+endpoints[0]
+    print 'endpoint destination is : '+endpoints[1]
+    for middlebox in middleboxes:
+        print 'middleboxe is: '+middlebox
+
     if not middleboxes:
         raise ValueError('No middlebox provided. Ask the user again.')
 
