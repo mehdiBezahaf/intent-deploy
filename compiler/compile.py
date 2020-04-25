@@ -157,6 +157,11 @@ def handle_request(request):
     }
 
     intent = request.get('intent')
+
+    #debug purpose
+    print("Handler Request: {}".format(json.dumps(request, indent=4)))
+    print("Handle, the intent is: "+intent)
+
     policy = None
     try:
         policy = compile_yacc(intent)
