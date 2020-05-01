@@ -46,9 +46,6 @@ def load_live_json_topology():
     response = requests.get(config.hosts_url, auth=(config.login, config.password))
     data = response.json()
 
-    #debug
-    print data
-
     hosts_handles= {}
     for host in data['hosts']:
         hostname = host['mac'].strip("00:0")
@@ -56,15 +53,9 @@ def load_live_json_topology():
         h='h'+str(hostname)
         hosts_handles[h]= h
 
-    #debug 
-    print hosts_handles
-
     #retrieve switches
     response = requests.get(config.switches_url, auth=(config.login, config.password))
     data = response.json()
-
-    #debug
-    print data
 
     switches_handles= {}
     for switch in data['devices']:
@@ -72,9 +63,6 @@ def load_live_json_topology():
         swname = int(swname, 16)
         s='s'+str(swname)
         switches_handles[s]= s
-
-    #debug 
-    print switches_handles
 
 
     return {'hosts':hosts_handles,'switches':switches_handles}
@@ -186,9 +174,16 @@ def forward_traffic(endpoints, path):
     src = hosts.get_host_id(endpoints[0])
 
 
+    #debug
+    print src
+
     if endpoints[1] not in handles['hosts'].keys():
         raise ValueError('Client '+endpoints[1]+' not found')
     dst = hosts.get_host_id(endpoints[1])
+
+
+    #debug
+    print dst
 
     route_req = get_path(src, dst, path)
     

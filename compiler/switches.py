@@ -12,13 +12,12 @@ class Switches:
         for switch in data['devices']:
             switches_id.append(switch['id'])
             
-        self.__switches = {'id':switches_id}
+        self.__switches = switches_id
     
     def get_switch_id(self, switchname):
         switchname = switchname.strip("s")
         id = "of:00000000000000{:02x}".format(int(switchname))
         for switch in self.__switches:
-            if switch.get("id") == id:
+            if switch == id:
                 return id  
         return ""
-    
