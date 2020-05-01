@@ -12,12 +12,6 @@ import json
 
 m = {}
 
-ACTIONS = {
-    "forwardIntent": forward_traffic,
-    "build.build-yes": build_accepted,
-    "build.build-no.feedback": build_feedback,
-    "request.hosts": request_hosts
-}
 
 
 def list_handles(elements, key):
@@ -307,3 +301,11 @@ def handle_request(request):
     }
 
 # m = mappings.read()
+
+
+ACTIONS = {
+    "forwardIntent": forward_traffic,
+    "build.build-yes": build_accepted,
+    "build.build-no.feedback": build_feedback,
+    "request.hosts": request_hosts
+}
