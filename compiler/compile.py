@@ -152,13 +152,13 @@ def possible_routes(src, dst):
 
     data = response.json()
 
-    #debug
-    print data
-
     routes = []
     for route in data['routes']:
-        routes.append(route[1])
-        
+        routes.append(data['routes'][route])
+
+    #debug
+    print routes
+    
     return routes
 
 def forward_traffic(endpoints, path):
