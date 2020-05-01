@@ -145,9 +145,15 @@ def get_path(src, dst, path):
 
 def possible_routes(src, dst):
 
-    payload = {'api_key': config.api_key, 'key': src+dst}
+    payload = {}
+    payload["api_key"] = config.api_key
+    payload["key"] = src+dst
+
     response = requests.get(config.ngcdi_url+'get_routes', params=payload)
     data = response.json()
+
+    #debug
+    print data
 
     routes = []
     for route in data['routes']:
@@ -187,6 +193,9 @@ def forward_traffic(endpoints, path):
 
     route_req = get_path(src, dst, path)
     
+    #debug
+    print 'the routee is ' + route_req
+
     found = False
     for route in possible_routes(src, dst):
         if route == route_req:
@@ -265,6 +274,10 @@ def compile_yacc(nile_intent):
 
 def deploy(policy):
     #payload = {'api_key': api_key, 'key': src+dst}
+
+    #debug
+    print 'the policy is ' + policy
+
     response = requests.get(config.ngcdi_url+'push_intent', params=policy)
     data = response.json()
 
