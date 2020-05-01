@@ -1,8 +1,5 @@
 import json, base64
-import coloredlogs, logging
 from compiler import config
-
-coloredlogs.install(level='INFO')
 
 
   
