@@ -5,7 +5,7 @@ import requests
   
 class Hosts:
     def __init__(self):
-        response = requests.get(hosts_url, auth=(login, password))
+        response = requests.get(config.hosts_url, auth=(config.login, config.password))
         data = response.json()
 
         hosts_mac = []

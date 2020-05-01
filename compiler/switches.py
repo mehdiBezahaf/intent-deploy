@@ -5,7 +5,7 @@ import requests
   
 class Switches:
     def __init__(self):
-        response = requests.get(switches_url, auth=(login, password))
+        response = requests.get(config.switches_url, auth=(config.login, config.password))
         data = response.json()
 
         switches_id = []
