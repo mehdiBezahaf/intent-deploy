@@ -227,7 +227,7 @@ def compile_yacc(nile_intent):
         print ' - '+switch 
 
     
-    policy = ACTIONS[intent_id](endpoints, path)
+    policy = ACTIONS[intent_id[0]](endpoints, path)
 
 
 #    if not middleboxes:
