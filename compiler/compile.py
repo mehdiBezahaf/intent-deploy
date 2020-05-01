@@ -5,8 +5,8 @@ import subprocess
 import time
 
 from compiler import config, mappings, parser
-from hosts import Hosts
-from switches import Switches
+from compiler.hosts import Hosts
+from compiler.switches import Switches
 import json
 
 
@@ -184,7 +184,7 @@ def forward_traffic(endpoints, path):
     
     found = False
     for route in possible_routes(src, dst):
-        if route = route_req
+        if route == route_req:
             found = True
             break
 
@@ -198,7 +198,6 @@ def forward_traffic(endpoints, path):
         raise ValueError('This route is not possible to apply')
     #debug purpose
     print policy
-
     return policy
 
         
