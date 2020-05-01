@@ -19,7 +19,7 @@ class Hosts:
         mac = "00:00:00:00:00:{:02x}".format(int(hostname))
         for host in self.__hosts:
             if host == mac:
-                return host[mac] #it should reutrn the id  
+                return self.__hosts[mac] #it should reutrn the id  
         return ""
     
     def get_host_mac(self, hostname):
