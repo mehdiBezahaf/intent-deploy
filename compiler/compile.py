@@ -145,11 +145,11 @@ def get_path(src, dst, path):
 
 def possible_routes(src, dst):
 
-    payload = {}
-    payload["api_key"] = config.api_key
-    payload["key"] = src+dst
+    response = requests.get(config.ngcdi_url+'get_routes', json={"api_key": config.api_key, "key": src+dst})
 
-    response = requests.get(config.ngcdi_url+'get_routes', params=payload)
+    if response.status_code != 200:
+        raise ValueError('Impossible to get the routes between '+src+' and '+dst)
+
     data = response.json()
 
     #debug
@@ -280,6 +280,10 @@ def deploy(policy):
     print 'the policy is ' + policy
 
     response = requests.get(config.ngcdi_url+'push_intent', params=policy)
+
+    if response.status_code == 409:
+        #Service protection activated
+        raise ValueError('Impossible to apply the intent. The seervice is protected')
     data = response.json()
 
     print("REPLY: {}".format(data))
