@@ -45,6 +45,9 @@ def load_live_json_topology():
     response = requests.get(config.hosts_url, auth=(login, password))
     data = response.json()
 
+    #debug
+    print data
+
     hosts_handles= {}
     for host in data['hosts']:
         hostname = host['mac'].strip("00:0")
@@ -52,9 +55,15 @@ def load_live_json_topology():
         h='h'+str(hostname)
         hosts_handles[h]= h
 
+    #debug 
+    print hosts_handles
+
     #retrieve switches
     response = requests.get(switches_url, auth=(login, password))
     data = response.json()
+
+    #debug
+    print data
 
     switches_handles= {}
     for switch in data['devices']:
@@ -62,6 +71,10 @@ def load_live_json_topology():
         swname = int(swname, 16)
         s='s'+str(swname)
         switches_handles[s]= s
+
+    #debug 
+    print switches_handles
+
 
     return {'hosts':hosts_handles,'switches':switches_handles}
 
@@ -161,6 +174,8 @@ def forward_traffic(endpoints, path):
     hosts = Hosts()
     policy = {}
 
+    #debug
+    print handles
 
     if len(endpoints) < 2:
         raise ValueError('No targets provided. Ask the user again.')
