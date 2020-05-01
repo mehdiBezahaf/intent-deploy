@@ -43,7 +43,7 @@ def load_json_topology(filename):
 
 def load_live_json_topology():
     
-    response = requests.get(config.hosts_url, auth=(login, password))
+    response = requests.get(config.hosts_url, auth=(config.login, config.password))
     data = response.json()
 
     #debug
@@ -60,7 +60,7 @@ def load_live_json_topology():
     print hosts_handles
 
     #retrieve switches
-    response = requests.get(switches_url, auth=(login, password))
+    response = requests.get(config.switches_url, auth=(config.login, config.password))
     data = response.json()
 
     #debug
@@ -157,7 +157,7 @@ def get_path(src, dst, path):
 
 def possible_routes(src, dst):
 
-    payload = {'api_key': api_key, 'key': src+dst}
+    payload = {'api_key': config.api_key, 'key': src+dst}
     response = requests.get(config.ngcdi_url+'get_routes', params=payload)
     data = response.json()
 
