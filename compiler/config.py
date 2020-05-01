@@ -74,7 +74,7 @@ MAPPINGS_TRAFFIC = ['udp', 'http', 'netflix', 'youtube']
 MAPPINGS_QOS_METRICS = [['latency', 'ms'], ['loss', '%'], ['jitter', 'ms'], ['throughput', 'mbps']]
 MAPPINGS_QOS_CONSTRAINTS = ['less', 'less or equal', 'more', 'more or equal', 'equal', 'different', 'none']
 
-NILE_OPERATIONS = ['add', 'from', 'to', 'with', 'allow', 'block', 'start', 'end', 'do', 'following']
+NILE_OPERATIONS = ['add', 'from', 'to', 'with', 'allow', 'block', 'start', 'end', 'do', 'following', 'for']
 NILE_FUNCTIONS = ['endpoint', 'client', 'middlebox', 'latency', 'bandwidth', 'jitter', 'loss', 'hour', 'date', 'traffic', 'flow', 'path', 'target']
 NILE_KEYWORDS = ['define', 'intent'] + NILE_OPERATIONS
 
