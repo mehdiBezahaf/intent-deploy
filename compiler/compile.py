@@ -170,7 +170,7 @@ def forward_traffic(endpoints, path):
 
     filename = 'res/topology.json'
     handles = load_json_topology(filename)
-    handles.update(load_live_json_topology)
+    handles.update(load_live_json_topology())
     hosts = Hosts()
     policy = {}
 
