@@ -11,7 +11,7 @@ tokens = [
     'COMMA',
 ]
 
-keywords =  config.NILE_OPERATIONS + ['middlebox', 'endpoint','define', 'intent']
+keywords =  config.NILE_OPERATIONS + ['middlebox', 'endpoint','define', 'intent', 'action', 'target', 'path']
 
 tokens += keywords
 
@@ -41,17 +41,24 @@ lex.lex()
 
 endpoints = []
 middleboxes = []
+actions = []
+targets = []
+path = []
+intent_id = []
 
 def p_statement(p):
     'statement : define intent ID COLON commands'
-    intent_name = p[3]
+    intent_id.append(p[3])
 
 def p_commands(p):
     '''commands : command 
                 | commands command'''
 
 def p_command(p):
-    '''command  : locations
+    '''command  : _action
+                | _target
+                | locations
+                | _path    
                 | _middlebox'''
 
 def p_middlebox_command(p):
@@ -75,6 +82,32 @@ def p_command_endpoint(p):
     endpoint_name = p[4]
     if not endpoint_name in endpoints:
         endpoints.append(endpoint_name)
+
+def p_command_action(p):
+    '''_action : do action LPAREN APOS ID APOS RPAREN'''
+    action_name = p[5]
+    if not action_name in actions:
+        actions.append(action_name)
+
+def p_command_target(p):
+    '''_target : for target LPAREN APOS ID APOS RPAREN'''
+    target_name = p[5]
+    if not target_name in targets:
+        targets.append(target_name)
+
+def p_path_command(p):
+    '''_path : following path LPAREN switches RPAREN'''
+
+def p_switches_name(p):
+    '''switches : _switchname
+                   | switches COMMA _switchname'''
+
+def p_switch_name(p):
+    '''_switchname : APOS ID APOS'''
+    switch_name = p[2]
+    if not switch_name in path:
+        path.append(switch_name)
+
 
 def p_error(p):
     if p:

@@ -74,6 +74,13 @@ MAPPINGS_TRAFFIC = ['udp', 'http', 'netflix', 'youtube']
 MAPPINGS_QOS_METRICS = [['latency', 'ms'], ['loss', '%'], ['jitter', 'ms'], ['throughput', 'mbps']]
 MAPPINGS_QOS_CONSTRAINTS = ['less', 'less or equal', 'more', 'more or equal', 'equal', 'different', 'none']
 
-NILE_OPERATIONS = ['add', 'from', 'to', 'with', 'allow', 'block', 'start', 'end']
-NILE_FUNCTIONS = ['endpoint', 'client', 'middlebox', 'latency', 'bandwidth', 'jitter', 'loss', 'hour', 'date', 'traffic', 'flow']
+NILE_OPERATIONS = ['add', 'from', 'to', 'with', 'allow', 'block', 'start', 'end', 'do', 'following']
+NILE_FUNCTIONS = ['endpoint', 'client', 'middlebox', 'latency', 'bandwidth', 'jitter', 'loss', 'hour', 'date', 'traffic', 'flow', 'path', 'target']
 NILE_KEYWORDS = ['define', 'intent'] + NILE_OPERATIONS
+
+hosts_url = 'https://onos.demo.ng-cdi.com/onos/v1/hosts'
+switches_url = 'https://onos.demo.ng-cdi.com/onos/v1/devices'
+ngcdi_url = 'https://api.demo.ng-cdi.com/api/'
+login = 'onos'
+password = 'rocks'
+api_key = 'be5460c7-eec9-4323-a894-fabaeb74831f'

@@ -5,10 +5,20 @@ import subprocess
 import time
 
 from compiler import config, mappings, parser
+from hosts import Hosts
+from switches import Switches
 import json
 
 
 m = {}
+
+ACTIONS = {
+    "forwardIntent": forward_traffic,
+    "build.build-yes": build_accepted,
+    "build.build-no.feedback": build_feedback,
+    "request.hosts": request_hosts
+}
+
 
 def list_handles(elements, key):
     handles = {}
@@ -18,6 +28,8 @@ def list_handles(elements, key):
             handles[h] = id
     print("handles", handles)
     return handles
+
+
 
 def load_json_topology(filename):
     data = json.loads(open(filename).read())
@@ -33,6 +45,31 @@ def load_json_topology(filename):
     middleboxes_handles = list_handles(middleboxes, 'type')
 
     return {'devices':devices_handles,'middleboxes':middleboxes_handles}
+
+def load_live_json_topology():
+    
+    response = requests.get(config.hosts_url, auth=(login, password))
+    data = response.json()
+
+    hosts_handles= {}
+    for host in data['hosts']:
+        hostname = host['mac'].strip("00:0")
+        hostname = int(hostname, 16)
+        h='h'+str(hostname)
+        hosts_handles[h]= h
+
+    #retrieve switches
+    response = requests.get(switches_url, auth=(login, password))
+    data = response.json()
+
+    switches_handles= {}
+    for switch in data['devices']:
+        swname = switch['id'].strip("of:0")
+        swname = int(swname, 16)
+        s='s'+str(swname)
+        switches_handles[s]= s
+
+    return {'hosts':hosts_handles,'switches':switches_handles}
 
 def extract_operation(nile_intent, op, op_idx):
     extracted_op = nile_intent[op_idx:].replace(op, '')
@@ -99,59 +136,144 @@ def compile(nile_intent):
 
     return compiled
 
-def compile_yacc(nile_intent):
-    policy = ''
+def get_path(src, dst, path):
+    switches = Switches()
+
+    full_path=[]
+    full_path.append(src)
+    for switch in path:
+        full_path.append(switches.get_switch_id(switch))
+    full_path.append(dst)
+
+    return full_path
+
+def possible_routes(src, dst):
+
+    payload = {'api_key': api_key, 'key': src+dst}
+    response = requests.get(config.ngcdi_url+'get_routes', params=payload)
+    data = response.json()
+
+    routes = []
+    for route in data['routes']:
+        routes.append(route[1])
+        
+    return routes
+
+def forward_traffic(endpoints, path):
 
     filename = 'res/topology.json'
     handles = load_json_topology(filename)
+    handles.update(load_live_json_topology)
+    hosts = Hosts()
+    policy = {}
+
+
+    if len(endpoints) < 2:
+        raise ValueError('No targets provided. Ask the user again.')
+
+    if endpoints[0] not in handles['hosts'].keys():
+        raise ValueError('Client '+endpoints[0]+' not found')
+    src = hosts.get_host_id(endpoints[0])
+
+
+    if endpoints[1] not in handles['hosts'].keys():
+        raise ValueError('Client '+endpoints[1]+' not found')
+    dst = hosts.get_host_id(endpoints[1])
+
+    route_req = get_path(src, dst, path)
+    
+    found = False
+    for route in possible_routes(src, dst)
+        if route = route_req
+            found = True
+            break
+
+    if found:
+        policy["api_key"] = config.api_key
+        routes = {}
+        routes["key"] = src+dst
+        routes["route"] = route_req
+        policy["routes"] = routes
+    else:
+        raise ValueError('This route is not possible to apply')
+    #debug purpose
+    print policy
+
+    return policy
+
+        
+
+    
+def compile_yacc(nile_intent):
+    policy = ''
+
 
     parser.yacc_compile(nile_intent)
 
     endpoints = parser.endpoints
     middleboxes = parser.middleboxes
+    targets = parser.targets
+    path = parser.path
+    intent_id = parser.intent_id
 
     #init the parser
     parser.endpoints = []
     parser.middleboxes = []
+    parser.targets = []
+    parser.path = []
+    parser.intent_id = []
 
     #for debug purpose 
     print 'endpoint source is: '+endpoints[0]
     print 'endpoint destination is : '+endpoints[1]
     for middlebox in middleboxes:
         print 'middleboxe is: '+middlebox
+    print 'the target is : '+targets[0]
+    print 'the path is: ' 
+    for switch in path:
+        print ' - '+switch 
 
-    if not middleboxes:
-        raise ValueError('No middlebox provided. Ask the user again.')
+    
+    policy = ACTIONS[intent_id](endpoints, path)
 
-    if len(endpoints) < 2:
-        raise ValueError('No targets provided. Ask the user again.')
 
-    if endpoints[0] not in handles['devices'].keys():
-        raise ValueError('Client '+endpoints[0]+' not found')
-    policy += 'Endpoint 1: '+ handles['devices'][endpoints[0]]
-
-    if endpoints[1] not in handles['devices'].keys():
-        raise ValueError('Client '+endpoints[1]+' not found')
-    policy += '\nEndpoint 2: '+ handles['devices'][endpoints[1]]
-
-    for middlebox in middleboxes:
-        if middlebox not in handles['middleboxes'].keys():
-            raise ValueError('Middlebox '+middlebox+' not found')
-        policy += '\nAdd middlebox: '+handles['middleboxes'][middlebox]
+#    if not middleboxes:
+#        raise ValueError('No middlebox provided. Ask the user again.')
+#
+#    if len(endpoints) < 2:
+#        raise ValueError('No targets provided. Ask the user again.')
+#
+#    if endpoints[0] not in handles['devices'].keys():
+#        raise ValueError('Client '+endpoints[0]+' not found')
+#    policy += 'Endpoint 1: '+ handles['devices'][endpoints[0]]
+#
+#    if endpoints[1] not in handles['devices'].keys():
+#        raise ValueError('Client '+endpoints[1]+' not found')
+#    policy += '\nEndpoint 2: '+ handles['devices'][endpoints[1]]
+#
+#    for middlebox in middleboxes:
+#        if middlebox not in handles['middleboxes'].keys():
+#            raise ValueError('Middlebox '+middlebox+' not found')
+#        policy += '\nAdd middlebox: '+handles['middleboxes'][middlebox]
 
     return policy
 
 
 def deploy(policy):
-    try:
-        script_name = 'res/scripts/{}_intent.sh'.format(datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S'))
-        with open(script_name, 'w') as script:
-            script.write(policy)
-            os.chmod(script_name, 0o777)
+    #payload = {'api_key': api_key, 'key': src+dst}
+    response = requests.get(config.ngcdi_url+'push_intent', params=policy)
+    data = response.json()
 
-        subprocess.check_call('./' + script_name, stderr=subprocess.STDOUT, shell=True)
-    except subprocess.CalledProcessError as err:
-        raise ValueError('Deployment of compiled intent failed. Error: {}'.format(err))
+    print("REPLY: {}".format(data))
+#    try:
+#        script_name = 'res/scripts/{}_intent.sh'.format(datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S'))
+#        with open(script_name, 'w') as script:
+#            script.write(policy)
+#            os.chmod(script_name, 0o777)
+#
+#        subprocess.check_call('./' + script_name, stderr=subprocess.STDOUT, shell=True)
+#    except subprocess.CalledProcessError as err:
+#        raise ValueError('Deployment of compiled intent failed. Error: {}'.format(err))
 
 
 def handle_request(request):
@@ -162,14 +284,10 @@ def handle_request(request):
 
     intent = request.get('intent')
 
-    #debug purpose
-    print("Handler Request: {}".format(json.dumps(request, indent=4)))
-    print("Handle, the intent is: "+intent)
-
     policy = None
     try:
         policy = compile_yacc(intent)
-        #deploy(policy)
+        deploy(policy)
     except ValueError as err:
         print 'Error: {}'.format(err)
         status = {
