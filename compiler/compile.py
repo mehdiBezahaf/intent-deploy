@@ -205,9 +205,11 @@ def forward_traffic(endpoints, path):
 
     if found:
         policy["api_key"] = config.api_key
-        routes = {}
-        routes["key"] = src+dst
-        routes["route"] = route_req
+        routes = []
+        info = {}
+        info["key"] = src+dst
+        info["route"] = route_req
+        routes.append(info)
         policy["routes"] = routes
     else:
         raise ValueError('This route is not possible to apply')
@@ -276,10 +278,7 @@ def compile_yacc(nile_intent):
 def deploy(policy):
     #payload = {'api_key': api_key, 'key': src+dst}
 
-    #debug
-    print 'the policy is ' + policy
-
-    response = requests.get(config.ngcdi_url+'push_intent', params=policy)
+    response = requests.get(config.ngcdi_url+'push_intent', json=policy)
 
     if response.status_code == 409:
         #Service protection activated
