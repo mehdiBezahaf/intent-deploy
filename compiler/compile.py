@@ -194,7 +194,8 @@ def forward_traffic(endpoints, path):
     route_req = get_path(src, dst, path)
     
     #debug
-    print 'the routee is ' + route_req
+    print 'the routee is '  
+    print route_req
 
     found = False
     for route in possible_routes(src, dst):
