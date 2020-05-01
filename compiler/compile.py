@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import time
+import requests
 
 from compiler import config, mappings, parser
 from compiler.hosts import Hosts
