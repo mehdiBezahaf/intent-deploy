@@ -39,12 +39,14 @@ def t_error(t):
 
 lex.lex()
 
-endpoints = []
-middleboxes = []
-actions = []
-targets = []
-path = []
-intent_id = []
+def initialize ():
+    endpoints = []
+    middleboxes = []
+    actions = []
+    targets = []
+    path = []
+    intent_id = []
+    periods = []
 
 def p_statement(p):
     'statement : define intent ID COLON commands'
@@ -58,7 +60,8 @@ def p_command(p):
     '''command  : _action
                 | _target
                 | locations
-                | _path    
+                | _path 
+                | period
                 | _middlebox'''
 
 def p_middlebox_command(p):
@@ -73,6 +76,15 @@ def p_middlebox_name(p):
     middlebox_name = p[4]
     if not middlebox_name in middleboxes:
         middleboxes.append(middlebox_name)
+
+def p_command_period(p):
+    '''period : start _time to _time'''
+
+def p_command_time(p):
+    '''_time : hour LPAREN APOS ID APOS RPAREN'''
+    period_name = p[4]
+    if not period_name in periods:
+        periods.append(period_name)
 
 def p_command_locations(p):
     '''locations : from _endpoint to _endpoint'''

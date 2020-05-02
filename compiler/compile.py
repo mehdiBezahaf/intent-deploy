@@ -165,6 +165,23 @@ def possible_routes(src, dst):
     
     return routes
 
+def protect_service(period):
+    policy = {}
+    policy["api_key"] = config.api_key
+    spp = []
+    info = {}
+    info["priority"] = 10
+    info["enabled"] = True
+    info["start_time"] = period[0]
+    info["end_time"] = period[1]
+    spp.append(info)
+    policy["spp"] = spp
+
+    #debug purpose
+    print policy
+    
+    return policy
+
 def forward_traffic(endpoints, path):
 
     filename = 'res/topology.json'
@@ -226,35 +243,52 @@ def forward_traffic(endpoints, path):
     
 def compile_yacc(nile_intent):
     policy = ''
-
-
-    parser.yacc_compile(nile_intent)
-
-    endpoints = parser.endpoints
-    middleboxes = parser.middleboxes
-    targets = parser.targets
-    path = parser.path
-    intent_id = parser.intent_id
+    info = {}
 
     #init the parser
-    parser.endpoints = []
-    parser.middleboxes = []
-    parser.targets = []
-    parser.path = []
-    parser.intent_id = []
+    parser.initialize()
+ #   parser.endpoints = []
+ #   parser.middleboxes = []
+ #   parser.targets = []
+ #   parser.path = []
+ #   parser.intent_id = []
+    parser.yacc_compile(nile_intent)
 
-    #for debug purpose 
-    print 'endpoint source is: '+endpoints[0]
-    print 'endpoint destination is : '+endpoints[1]
-    for middlebox in middleboxes:
-        print 'middleboxe is: '+middlebox
-    print 'the target is : '+targets[0]
-    print 'the path is: ' 
-    for switch in path:
-        print ' - '+switch 
+    intent_id = parser.intent_id
+
+    if intent_id == 'forwardIntent':
+        info['url'] = config.ngcdi_url+'push_intent'
+        endpoints = parser.endpoints
+        middleboxes = parser.middleboxes
+        targets = parser.targets
+        path = parser.path
+
+        #for debug purpose 
+        print 'endpoint source is: '+endpoints[0]
+        print 'endpoint destination is : '+endpoints[1]
+        for middlebox in middleboxes:
+            print 'middleboxe is: '+middlebox
+        print 'the target is : '+targets[0]
+        print 'the path is: ' 
+        for switch in path:
+            print ' - '+switch 
+    
+        policy = forward_traffic(endpoints, path)
+        
+
+    elif intent_id == 'sppIntent':
+        info['url'] = config.ngcdi_url+'push_spp'
+        targets = parser.targets
+        period = parser.periods
+
+        #for debug purpose 
+        print 'starting time is: '+period[0]
+        print 'and ending time is : '+period[1]
+        print 'the target is : '+targets[0]
+    
+        policy = protect_service(period)
 
     
-    policy = ACTIONS[intent_id[0]](endpoints, path)
 
 
 #    if not middleboxes:
@@ -276,13 +310,14 @@ def compile_yacc(nile_intent):
 #            raise ValueError('Middlebox '+middlebox+' not found')
 #        policy += '\nAdd middlebox: '+handles['middleboxes'][middlebox]
 
-    return policy
+    info['policy'] = policy
+    return info
 
 
-def deploy(policy):
+def deploy(info):
     #payload = {'api_key': api_key, 'key': src+dst}
 
-    response = requests.get(config.ngcdi_url+'push_intent', json=policy)
+    response = requests.get(info['url'], json=info['policy'])
 
     if response.status_code == 409:
         #Service protection activated
@@ -309,10 +344,10 @@ def handle_request(request):
 
     intent = request.get('intent')
 
-    policy = None
+    info = {}
     try:
-        policy = compile_yacc(intent)
-        deploy(policy)
+        info = compile_yacc(intent)
+        deploy(info)
     except ValueError as err:
         print 'Error: {}'.format(err)
         status = {
@@ -328,7 +363,7 @@ def handle_request(request):
         },
         'output': {
             'type': 'sonata-nfv commands',
-            'policy': policy
+            'policy': info['policy']
         }
     }
 
