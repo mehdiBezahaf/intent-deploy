@@ -9,7 +9,7 @@ tokens = [
     'APOS',
     'COLON',
     'COMMA',
-    'TIME',
+    'DATE',
 ]
 
 endpoints = []
@@ -37,7 +37,9 @@ colon = r':'
 digit            = r'([0-9])'
 nondigit         = r'([_A-Za-z])'
 
-t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
+#t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
+#t_TIME  = r'(' + digit +r'*-' + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
+t_DATE = r'[0-9]*-[0-9]*-[0-9]*[a-zA-Z][0-9]*:[0-9]*:[0-9]*+[0-9]*:[0-9]*'
 #                  2020          -      05             -       02             T         22            :       00            :       00           +      01             :      00
 # identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'        
 # 
@@ -110,7 +112,7 @@ def p_command_period(p):
     '''period : start _time to _time'''
 
 def p_command_time(p):
-    '''_time : hour LPAREN APOS TIME APOS RPAREN'''
+    '''_time : hour LPAREN APOS DATE APOS RPAREN'''
     period_name = p[4]
     if not period_name in periods:
         periods.append(period_name)
