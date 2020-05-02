@@ -148,7 +148,11 @@ def possible_routes(src, dst):
     response = requests.get(config.ngcdi_url+'get_routes', json={"api_key": config.api_key, "key": src+dst})
 
     if response.status_code != 200:
-        raise ValueError('Impossible to get the routes between '+src+' and '+dst)
+        src = src.strip("0:/None")         
+        srcname = 'h'+str(int(src, 16))
+        dst = dst.strip("0:/None")         
+        dstname = 'h'+str(int(dst, 16))
+        raise ValueError('Impossible to get the routes between '+srcname+' and '+dstname)
 
     data = response.json()
 
