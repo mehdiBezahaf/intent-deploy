@@ -9,6 +9,11 @@ tokens = [
     'APOS',
     'COLON',
     'COMMA',
+    'MINUS',
+    'TIME'
+    'PLUS',
+    'digit',
+    'nondigit',
 ]
 
 endpoints = []
@@ -29,10 +34,29 @@ t_RPAREN = r'\)'
 t_APOS = r'\''
 t_COLON = r':'
 t_COMMA = r','
+t_MINUS   = r'-'
+t_PLUS  = r'+'
+
+digit            = r'([0-9])'
+nondigit         = r'([_A-Za-z])'
+
+t_TIME  = r'(' + digit +r'*' + MINUS + digit +r'*' + MINUS + digit +r'*' + nondigit + digit +r'*' + COLON + digit +r'*' + COLON + digit +r'*' + PLUS + digit +r'*' + COLON + digit +r'*)'
+#                  2020          -      05             -       02             T         22            :       00            :       00           +      01             :      00
+# identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'        
+# 
+# def t_ID(t):
+#     # want docstring to be identifier above. ?????
+#     ...
 
 def t_NEWLINE(t):
     r'\n'
     t.lexer.lineno += 1
+    return t
+
+def t_ID(t):
+    r'[a-zA-Z][a-zA-Z0-9_]*'
+    if t.value in keywords:
+        t.type = t.value
     return t
 
 def t_ID(t):
@@ -89,7 +113,7 @@ def p_command_period(p):
     '''period : start _time to _time'''
 
 def p_command_time(p):
-    '''_time : hour LPAREN APOS ID APOS RPAREN'''
+    '''_time : hour LPAREN APOS TIME APOS RPAREN'''
     period_name = p[4]
     if not period_name in periods:
         periods.append(period_name)
