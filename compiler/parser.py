@@ -9,11 +9,7 @@ tokens = [
     'APOS',
     'COLON',
     'COMMA',
-    'MINUS',
-    'TIME'
-    'PLUS',
-    'digit',
-    'nondigit',
+    'TIME',
 ]
 
 endpoints = []
@@ -34,13 +30,13 @@ t_RPAREN = r'\)'
 t_APOS = r'\''
 t_COLON = r':'
 t_COMMA = r','
-t_MINUS   = r'-'
-t_PLUS  = r'+'
 
+minus   = r'-'
+plus  = r'+'
 digit            = r'([0-9])'
 nondigit         = r'([_A-Za-z])'
 
-t_TIME  = r'(' + digit +r'*' + MINUS + digit +r'*' + MINUS + digit +r'*' + nondigit + digit +r'*' + COLON + digit +r'*' + COLON + digit +r'*' + PLUS + digit +r'*' + COLON + digit +r'*)'
+t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + COLON + digit +r'*' + COLON + digit +r'*' + plus + digit +r'*' + COLON + digit +r'*)'
 #                  2020          -      05             -       02             T         22            :       00            :       00           +      01             :      00
 # identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'        
 # 
