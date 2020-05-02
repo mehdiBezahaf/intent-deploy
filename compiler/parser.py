@@ -33,10 +33,11 @@ t_COMMA = r','
 
 minus   = r'-'
 plus  = r'+'
+colon = r':'
 digit            = r'([0-9])'
 nondigit         = r'([_A-Za-z])'
 
-t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + COLON + digit +r'*' + COLON + digit +r'*' + plus + digit +r'*' + COLON + digit +r'*)'
+t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
 #                  2020          -      05             -       02             T         22            :       00            :       00           +      01             :      00
 # identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'        
 # 
