@@ -11,6 +11,14 @@ tokens = [
     'COMMA',
 ]
 
+endpoints = []
+middleboxes = []
+actions = []
+targets = []
+path = []
+intent_id = []
+periods = []
+
 keywords =  config.NILE_OPERATIONS + ['middlebox', 'endpoint','define', 'intent', 'action', 'target', 'path']
 
 tokens += keywords
