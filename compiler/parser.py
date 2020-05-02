@@ -37,15 +37,9 @@ colon = r':'
 digit            = r'([0-9])'
 nondigit         = r'([_A-Za-z])'
 
-#t_TIME  = r'(' + digit +r'*' + minus + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
-#t_TIME  = r'(' + digit +r'*-' + digit +r'*' + minus + digit +r'*' + nondigit + digit +r'*' + colon + digit +r'*' + colon + digit +r'*' + plus + digit +r'*' + colon + digit +r'*)'
+
 t_DATE = r'[0-9]*-[0-9]*-[0-9]*[a-zA-Z][0-9]*:[0-9]*:[0-9]*+[0-9]*:[0-9]*'
-#                  2020          -      05             -       02             T         22            :       00            :       00           +      01             :      00
-# identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'        
-# 
-# def t_ID(t):
-#     # want docstring to be identifier above. ?????
-#     ...
+
 
 def t_NEWLINE(t):
     r'\n'
