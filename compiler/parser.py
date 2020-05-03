@@ -30,7 +30,7 @@ t_RPAREN = r'\)'
 t_APOS = r'\''
 t_COLON = r':'
 t_COMMA = r','
-t_DATE   = r'\d{4}\-\d{2}\-\d{2}\w\d{2}\:\d{2}\:\d{2}\+\d{2}\:\d{2}'
+t_DATE   = r'\d{4}\-\d{2}\-\d{2}\w\d{2}\:\d{2}\:\d{2}(\w|\+\d{2}\:\d{2})'
 
 
 def t_NEWLINE(t):
