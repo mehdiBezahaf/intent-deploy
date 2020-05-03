@@ -46,11 +46,6 @@ def t_NEWLINE(t):
     t.lexer.lineno += 1
     return t
 
-def t_ID(t):
-    r'[a-zA-Z][a-zA-Z0-9_]*'
-    if t.value in keywords:
-        t.type = t.value
-    return t
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z0-9_]*'
