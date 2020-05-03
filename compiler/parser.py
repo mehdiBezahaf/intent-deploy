@@ -9,7 +9,7 @@ tokens = [
     'APOS',
     'COLON',
     'COMMA',
-    'DATE',
+    'ANY',
 ]
 
 endpoints = []
@@ -30,15 +30,7 @@ t_RPAREN = r'\)'
 t_APOS = r'\''
 t_COLON = r':'
 t_COMMA = r','
-
-minus   = r'-'
-plus  = r'+'
-colon = r':'
-digit            = r'([0-9])'
-nondigit         = r'([_A-Za-z])'
-
-
-t_DATE = r'[0-9]*-[0-9]*-[0-9]*[a-zA-Z][0-9]*:[0-9]*:[0-9]*+[0-9]*:[0-9]*'
+t_ANY   = r'.*'
 
 
 def t_NEWLINE(t):
@@ -101,7 +93,7 @@ def p_command_period(p):
     '''period : start _time to _time'''
 
 def p_command_time(p):
-    '''_time : hour LPAREN APOS DATE APOS RPAREN'''
+    '''_time : hour LPAREN APOS ANY APOS RPAREN'''
     period_name = p[4]
     if not period_name in periods:
         periods.append(period_name)
