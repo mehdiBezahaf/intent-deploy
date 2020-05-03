@@ -246,7 +246,7 @@ def compile_yacc(nile_intent):
     info = {}
 
     #init the parser
-    parser.initialize()
+    #parser.initialize()
  #   parser.endpoints = []
  #   parser.middleboxes = []
  #   parser.targets = []
@@ -255,6 +255,9 @@ def compile_yacc(nile_intent):
     parser.yacc_compile(nile_intent)
 
     intent_id = parser.intent_id
+
+    #debug
+    print('the intent id is: ', intent_id)
 
     if intent_id == 'forwardIntent':
         info['url'] = config.ngcdi_url+'push_intent'
