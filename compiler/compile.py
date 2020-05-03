@@ -246,12 +246,14 @@ def compile_yacc(nile_intent):
     info = {}
 
     #init the parser
-    parser.initialize()
- #   parser.endpoints = []
- #   parser.middleboxes = []
- #   parser.targets = []
- #   parser.path = []
- #   parser.intent_id = []
+ #   parser.initialize()
+    parser.endpoints = []
+    parser.middleboxes = []
+    parser.targets = []
+    parser.path = []
+    parser.intent_id = []
+    parser.actions = []
+    parser.periods = []
     parser.yacc_compile(nile_intent)
 
     intent_id = parser.intent_id
@@ -322,7 +324,7 @@ def deploy(info):
 
     if response.status_code == 409:
         #Service protection activated
-        raise ValueError('Impossible to apply the intent. The seervice is protected')
+        raise ValueError('Impossible to apply the intent. The service is protected')
     data = response.json()
 
     print("REPLY: {}".format(data))
