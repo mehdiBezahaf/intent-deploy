@@ -143,6 +143,17 @@ def get_path(src, dst, path):
 
     return full_path
 
+def BST_to_UTC(bst):
+    import dateutil.parser
+    from dateutil.relativedelta import *
+
+
+
+    yourdate = dateutil.parser.parse(bst)
+    print (yourdate)
+    print (yourdate+relativedelta(hours=-1))
+    return yourdate+relativedelta(hours=-1)
+
 def possible_routes(src, dst):
 
     response = requests.get(config.ngcdi_url+'get_routes', json={"api_key": config.api_key, "key": src+dst})
@@ -172,8 +183,11 @@ def protect_service(period):
     info = {}
     info["priority"] = 10
     info["enabled"] = True
-    info["start_time"] = period[0]
-    info["end_time"] = period[1]
+    
+       
+    info["start_time"] = BST_to_UTC(period[0])
+
+    info["end_time"] = BST_to_UTC(period[1])
     spp.append(info)
     policy["spp"] = spp
 
