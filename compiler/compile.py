@@ -150,9 +150,12 @@ def BST_to_UTC(bst):
 
 
     yourdate = dateutil.parser.parse(bst)
+    utc = yourdate+relativedelta(hours=-1)
+
     print (yourdate)
-    print (yourdate+relativedelta(hours=-1))
-    return yourdate+relativedelta(hours=-1)
+    print (utc)
+    
+    return utc.strftime('%Y-%m-%dT%H:%M:%S%z')
 
 def possible_routes(src, dst):
 
