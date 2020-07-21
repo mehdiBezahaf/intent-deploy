@@ -188,9 +188,14 @@ def protect_service(period):
     info["enabled"] = True
     
        
-    info["start_time"] = BST_to_UTC(period[0])
+    #info["start_time"] = BST_to_UTC(period[0])
 
-    info["end_time"] = BST_to_UTC(period[1])
+    #info["end_time"] = BST_to_UTC(period[1])
+
+    info["start_time"] = period[0]
+
+    info["end_time"] = period[1]
+
     spp.append(info)
     policy["spp"] = spp
 
