@@ -25,7 +25,7 @@ def deploy():
     print("Request: {}".format(json.dumps(req, indent=4)))
     try:
         res = compile.handle_request(req)
-    except ValueError as err:
+    except Exception as err:
         print(err)
         res = {"status": {'code': 404, 'details': 'Could not deploy intent. '+format(err)}}
     res = json.dumps(res, indent=4)

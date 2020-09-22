@@ -385,10 +385,7 @@ def handle_request(request):
         deploy(info)
     except ValueError as err:
         print 'Error handle: {}'.format(err)
-        status = {
-            'code': 404,
-            'details': str(err)
-        }
+        raise
 
     return {
         'status': status,
