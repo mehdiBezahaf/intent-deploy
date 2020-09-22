@@ -241,7 +241,13 @@ def forward_traffic(endpoints, path):
     print route_req
 
     found = False
-    for route in possible_routes(src, dst):
+
+    try:
+        routes = possible_routes(src, dst);
+    except ValueError as err:
+        raise
+
+    for route in routes:
         if route == route_req:
             found = True
             break
