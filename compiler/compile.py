@@ -306,8 +306,12 @@ def compile_yacc(nile_intent):
         for switch in path:
             print ' - '+switch 
     
-        policy = forward_traffic(endpoints, path)
-        
+        try:
+            policy = forward_traffic(endpoints, path)
+        except ValueError as err:
+            print 'exception catched inside compile yacc'
+            print err
+            raise           
 
     elif intent_id[0] == 'sppIntent':
         info['url'] = config.ngcdi_url+'push_spp'
@@ -319,12 +323,7 @@ def compile_yacc(nile_intent):
         print 'and ending time is : '+period[1]
         print 'the target is : '+targets[0]
     
-        try:
-            policy = protect_service(period)
-        except ValueError as err:
-            print 'exception catched inside compile yacc'
-            print err
-            raise    
+        policy = protect_service(period)  
 
 
 #    if not middleboxes:
