@@ -243,8 +243,10 @@ def forward_traffic(endpoints, path):
     found = False
 
     try:
-        routes = possible_routes(src, dst);
+        routes = possible_routes(src, dst)
     except ValueError as err:
+        print 'exception catched inside forward traffic'
+        print err
         raise
 
     for route in routes:
@@ -317,9 +319,12 @@ def compile_yacc(nile_intent):
         print 'and ending time is : '+period[1]
         print 'the target is : '+targets[0]
     
-        policy = protect_service(period)
-
-    
+        try:
+            policy = protect_service(period)
+        except ValueError as err:
+            print 'exception catched inside compile yacc'
+            print err
+            raise    
 
 
 #    if not middleboxes:
@@ -380,7 +385,7 @@ def handle_request(request):
         info = compile_yacc(intent)
         deploy(info)
     except ValueError as err:
-        print 'Error: {}'.format(err)
+        print 'Error handle: {}'.format(err)
         status = {
             'code': 404,
             'details': str(err)
